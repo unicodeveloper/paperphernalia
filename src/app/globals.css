@@ -1,0 +1,554 @@
+@import "tailwindcss";
+@source "../../node_modules/streamdown/dist/*.js";
+
+/* ─────────────────────────────────────────────────────────────
+   Paraphernalia · paper system
+   Every surface is a stock of paper; every accent is an ink.
+   ───────────────────────────────────────────────────────────── */
+
+:root {
+  --paper: #f1e9d8;
+  --paper-2: #e9dfc9;
+  --paper-3: #ded2b8;
+  --sheet: #f8f3e7;
+  --ink: #1d1a16;
+  --ink-2: #4d463c;
+  --ink-3: #7c7263;
+  --rule: #cdbf9f;
+  --rule-soft: #ddd1b6;
+  --iron: #26356f; /* iron-gall ink, used for handwriting and links */
+  --oxblood: #8f2a1d; /* rubber stamps */
+  --verdigris: #2f6552;
+  --highlight: rgba(246, 214, 92, 0.62);
+  --brass-1: #c9a45c;
+  --brass-2: #8a6a2c;
+  --shadow: 32 24 12;
+  --grain-opacity: 0.55;
+  --arxiv: #9d2f1f;
+  --pubmed: #234b7c;
+  --biorxiv: #9a6a12;
+  --chemrxiv: #2f6552;
+  color-scheme: light;
+  /* Streamdown reads shadcn-style tokens; point them at our paper palette. */
+  --background: var(--sheet);
+  --foreground: var(--ink);
+  --card: var(--sheet);
+  --card-foreground: var(--ink);
+  --muted: var(--paper-2);
+  --muted-foreground: var(--ink-3);
+  --border: var(--rule);
+  --input: var(--rule);
+  --primary: var(--ink);
+  --primary-foreground: var(--sheet);
+  --radius: 2px;
+}
+
+:root[data-theme="dark"] {
+  --paper: #1b1814;
+  --paper-2: #221e19;
+  --paper-3: #2b261f;
+  --sheet: #25211b;
+  --ink: #efe6d2;
+  --ink-2: #c7bca6;
+  --ink-3: #958a76;
+  --rule: #4a4236;
+  --rule-soft: #3a342b;
+  --iron: #a9b8ef;
+  --oxblood: #e0775f;
+  --verdigris: #7fc0a6;
+  --highlight: rgba(214, 170, 50, 0.38);
+  --brass-1: #d6b36a;
+  --brass-2: #7b5d24;
+  --shadow: 0 0 0;
+  --grain-opacity: 0.35;
+  --arxiv: #e2785f;
+  --pubmed: #86aee3;
+  --biorxiv: #e0b35a;
+  --chemrxiv: #7fc0a6;
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper: #1b1814;
+    --paper-2: #221e19;
+    --paper-3: #2b261f;
+    --sheet: #25211b;
+    --ink: #efe6d2;
+    --ink-2: #c7bca6;
+    --ink-3: #958a76;
+    --rule: #4a4236;
+    --rule-soft: #3a342b;
+    --iron: #a9b8ef;
+    --oxblood: #e0775f;
+    --verdigris: #7fc0a6;
+    --highlight: rgba(214, 170, 50, 0.38);
+    --brass-1: #d6b36a;
+    --brass-2: #7b5d24;
+    --shadow: 0 0 0;
+    --grain-opacity: 0.35;
+    --arxiv: #e2785f;
+    --pubmed: #86aee3;
+    --biorxiv: #e0b35a;
+    --chemrxiv: #7fc0a6;
+    color-scheme: dark;
+  }
+}
+
+@theme inline {
+  --color-paper: var(--paper);
+  --color-paper-2: var(--paper-2);
+  --color-paper-3: var(--paper-3);
+  --color-sheet: var(--sheet);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-ink-3: var(--ink-3);
+  --color-rule: var(--rule);
+  --color-rule-soft: var(--rule-soft);
+  --color-iron: var(--iron);
+  --color-oxblood: var(--oxblood);
+  --color-verdigris: var(--verdigris);
+  --font-display: var(--font-fraunces), "Iowan Old Style", Georgia, serif;
+  --font-serif: var(--font-source-serif), Georgia, serif;
+  --font-mono: var(--font-plex-mono), ui-monospace, monospace;
+  --font-hand: var(--font-caveat), "Bradley Hand", cursive;
+}
+
+html {
+  background: var(--paper);
+  overflow-x: clip;
+}
+
+/* Large and ultra-wide displays: scale the rem system up so pages don't look small. */
+@media (min-width: 1920px) {
+  html { font-size: 112.5%; }
+}
+@media (min-width: 2400px) {
+  html { font-size: 125%; }
+}
+
+body {
+  overflow-x: clip;
+  background-color: var(--paper);
+  color: var(--ink);
+  font-family: var(--font-serif);
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  font-feature-settings: "kern", "liga", "onum";
+}
+
+::selection {
+  background: var(--highlight);
+  color: var(--ink);
+}
+
+/* 1 · Fibre grain: fractal noise, multiplied into everything. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 60;
+  opacity: var(--grain-opacity);
+  mix-blend-mode: multiply;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='220' height='220'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/><feColorMatrix values='0 0 0 0 .35  0 0 0 0 .28  0 0 0 0 .18  0 0 0 .55 0'/></filter><rect width='100%' height='100%' filter='url(%23n)'/></svg>");
+}
+
+:root[data-theme="dark"] body::before {
+  mix-blend-mode: screen;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) body::before {
+    mix-blend-mode: screen;
+  }
+}
+
+/* 2 · Foxing + lamplight vignette: faint age spots and darkened edges. */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 59;
+  background:
+    radial-gradient(40rem 26rem at 88% 8%, rgb(var(--shadow) / 0.05), transparent 70%),
+    radial-gradient(3px 3px at 12% 34%, rgb(140 95 40 / 0.18), transparent),
+    radial-gradient(5px 4px at 71% 63%, rgb(140 95 40 / 0.12), transparent),
+    radial-gradient(2px 2px at 38% 82%, rgb(140 95 40 / 0.2), transparent),
+    radial-gradient(ellipse 120% 90% at 50% 40%, transparent 55%, rgb(var(--shadow) / 0.14) 100%);
+}
+
+/* 3 · Laid paper: the chain and laid lines of a hand mould. */
+.laid {
+  background-color: var(--sheet);
+  background-image:
+    repeating-linear-gradient(90deg, transparent 0 46px, rgb(var(--shadow) / 0.045) 46px 47px),
+    repeating-linear-gradient(0deg, transparent 0 2px, rgb(var(--shadow) / 0.018) 2px 3px);
+}
+
+/* 4 · A single sheet resting on the desk. */
+.sheet {
+  position: relative;
+  background-color: var(--sheet);
+  box-shadow:
+    0 1px 0 rgb(255 255 255 / 0.35) inset,
+    0 1px 1px rgb(var(--shadow) / 0.08),
+    0 6px 14px -6px rgb(var(--shadow) / 0.22),
+    0 22px 40px -24px rgb(var(--shadow) / 0.35);
+}
+
+/* 5 · Stacked sheets: two pages peeking out beneath. */
+.stack {
+  position: relative;
+  isolation: isolate;
+}
+.stack::before,
+.stack::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background: var(--paper-2);
+  border: 1px solid rgb(var(--shadow) / 0.06);
+  box-shadow: 0 4px 10px -6px rgb(var(--shadow) / 0.3);
+  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.stack::before {
+  transform: rotate(-1.6deg) translate(-3px, 5px);
+}
+.stack::after {
+  transform: rotate(1.2deg) translate(4px, 7px);
+  background: var(--paper-3);
+}
+.stack:hover::before {
+  transform: rotate(-3.2deg) translate(-8px, 8px);
+}
+.stack:hover::after {
+  transform: rotate(2.6deg) translate(9px, 10px);
+}
+
+/* 6 · Dog-ear: the top-right corner folds down on hover. */
+.dogear {
+  --fold: 0px;
+  clip-path: polygon(0 0, calc(100% - var(--fold)) 0, 100% var(--fold), 100% 100%, 0 100%);
+  transition: clip-path 0.35s ease;
+}
+.dogear::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--fold);
+  height: var(--fold);
+  background: linear-gradient(225deg, transparent 50%, var(--paper-3) 50%, var(--sheet) 80%);
+  box-shadow: -2px 2px 4px rgb(var(--shadow) / 0.2);
+  transition: width 0.35s ease, height 0.35s ease;
+}
+.dogear:hover {
+  --fold: 26px;
+}
+@property --fold {
+  syntax: "<length>";
+  inherits: true;
+  initial-value: 0px;
+}
+
+/* 7 · Letterpress: type bitten into the stock. */
+.letterpress {
+  color: var(--ink);
+  text-shadow:
+    0 1px 0 rgb(255 255 255 / 0.55),
+    0 -1px 0 rgb(var(--shadow) / 0.18);
+}
+:root[data-theme="dark"] .letterpress {
+  text-shadow: 0 -1px 0 rgb(0 0 0 / 0.7), 0 1px 0 rgb(255 255 255 / 0.05);
+}
+
+/* 8 · Ink bleed: displacement filter roughens the edges of display type. */
+.ink-bleed {
+  filter: url(#ink-bleed);
+}
+
+/* 9 · Highlighter: a marker swept across the words. */
+.hl {
+  background-image: linear-gradient(100deg, transparent 0.4em, var(--highlight) 0.5em, var(--highlight) calc(100% - 0.3em), transparent calc(100% - 0.15em));
+  background-repeat: no-repeat;
+  background-size: 0% 72%;
+  background-position: 0 70%;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+  transition: background-size 0.9s cubic-bezier(0.6, 0, 0.2, 1);
+}
+.hl.on,
+.hl-hover:hover .hl,
+a:hover .hl {
+  background-size: 100% 72%;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hl {
+    background-size: 100% 72%;
+    transition: none;
+  }
+}
+
+/* 10 · Margin notes: iron-gall handwriting in the margins. */
+.hand {
+  font-family: var(--font-hand);
+  color: var(--iron);
+  line-height: 1.05;
+}
+
+/* 11 · Rubber stamp: uneven ink, slightly askew. */
+.stamp {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.28em 0.7em 0.22em;
+  border: 2px solid currentColor;
+  border-radius: 3px;
+  color: var(--oxblood);
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  transform: rotate(-2.5deg);
+  mix-blend-mode: multiply;
+  mask-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='60'><filter id='s'><feTurbulence type='fractalNoise' baseFrequency='1.4' numOctaves='2'/><feColorMatrix values='0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -2.2 1.9'/></filter><rect width='100%' height='100%' filter='url(%23s)'/></svg>");
+  mask-size: 120px 60px;
+}
+:root[data-theme="dark"] .stamp {
+  mix-blend-mode: normal;
+}
+
+/* 12 · Perforation: a tear-off edge punched along the top. */
+.perforated {
+  --hole: 5px;
+  mask:
+    radial-gradient(circle var(--hole) at 50% 0, transparent 98%, #000) 0 0 / 18px 100% repeat-x;
+}
+.perforated-left {
+  mask: radial-gradient(circle 5px at 0 50%, transparent 98%, #000) 0 0 / 100% 16px repeat-y;
+}
+
+/* 13 · Washi tape: a translucent strip holding a sheet down. */
+.tape {
+  position: absolute;
+  width: 92px;
+  height: 26px;
+  background:
+    repeating-linear-gradient(45deg, rgb(255 255 255 / 0.18) 0 6px, transparent 6px 12px),
+    rgb(214 196 150 / 0.62);
+  box-shadow: 0 1px 2px rgb(var(--shadow) / 0.15);
+  clip-path: polygon(3% 0, 97% 4%, 100% 50%, 96% 100%, 2% 96%, 0 50%);
+  mix-blend-mode: multiply;
+  z-index: 3;
+}
+:root[data-theme="dark"] .tape {
+  background: repeating-linear-gradient(45deg, rgb(255 255 255 / 0.05) 0 6px, transparent 6px 12px), rgb(120 104 70 / 0.55);
+  mix-blend-mode: normal;
+}
+
+/* 14 · Printer's crop marks at the corners of a plate. */
+.crop {
+  position: relative;
+}
+.crop > .crop-mark {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  pointer-events: none;
+  border-color: var(--ink-3);
+  opacity: 0.6;
+}
+.crop-mark.tl { top: -10px; left: -10px; border-top: 1px solid; border-left: 1px solid; }
+.crop-mark.tr { top: -10px; right: -10px; border-top: 1px solid; border-right: 1px solid; }
+.crop-mark.bl { bottom: -10px; left: -10px; border-bottom: 1px solid; border-left: 1px solid; }
+.crop-mark.br { bottom: -10px; right: -10px; border-bottom: 1px solid; border-right: 1px solid; }
+
+/* 15 · Ruled notepaper: for anything you write into. */
+.ruled {
+  background-color: var(--sheet);
+  background-image:
+    linear-gradient(90deg, transparent 3.25rem, rgb(185 60 50 / 0.35) 3.25rem, rgb(185 60 50 / 0.35) calc(3.25rem + 1px), transparent calc(3.25rem + 1px)),
+    repeating-linear-gradient(0deg, transparent 0 calc(2rem - 1px), rgb(70 100 160 / 0.2) calc(2rem - 1px) 2rem);
+}
+
+/* Fold crease: a soft valley running across a folded letter. */
+.crease {
+  background-image: linear-gradient(180deg, transparent 49.6%, rgb(var(--shadow) / 0.07) 50%, rgb(255 255 255 / 0.2) 50.4%, transparent 52%);
+}
+
+/* Deckle edge: a rough-torn paper backing drawn by an SVG filter. */
+.deckle-bg {
+  position: absolute;
+  inset: 0;
+  background: var(--sheet);
+  filter: url(#deckle) drop-shadow(0 10px 18px rgb(var(--shadow) / 0.25));
+  z-index: 0;
+}
+
+/* Brass label holder on a card-catalogue drawer. */
+.brass {
+  background: linear-gradient(180deg, var(--brass-1), var(--brass-2) 55%, var(--brass-1));
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 0.4), 0 1px 2px rgb(0 0 0 / 0.35);
+}
+
+.drawer {
+  background:
+    linear-gradient(180deg, rgb(255 255 255 / 0.08), transparent 40%),
+    var(--paper-2);
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--shadow) / 0.12),
+    inset 0 -3px 0 rgb(var(--shadow) / 0.1),
+    0 2px 0 rgb(var(--shadow) / 0.06);
+  transition: transform 0.35s cubic-bezier(0.2, 0.8, 0.2, 1), box-shadow 0.35s ease;
+}
+.drawer:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    inset 0 0 0 1px rgb(var(--shadow) / 0.16),
+    inset 0 -3px 0 rgb(var(--shadow) / 0.12),
+    0 14px 22px -14px rgb(var(--shadow) / 0.45);
+}
+
+/* Library index card: a red rule under the heading, blue rules beneath. */
+.index-card {
+  background-color: var(--sheet);
+  background-image:
+    linear-gradient(transparent 2.6rem, rgb(185 60 50 / 0.45) 2.6rem, rgb(185 60 50 / 0.45) calc(2.6rem + 1px), transparent calc(2.6rem + 1px)),
+    repeating-linear-gradient(180deg, transparent 0 calc(1.6rem - 1px), rgb(70 100 160 / 0.14) calc(1.6rem - 1px) 1.6rem);
+  background-position: 0 0, 0 2.6rem;
+}
+
+.label {
+  font-family: var(--font-mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-3);
+}
+
+.rule-double {
+  border-top: 1px solid var(--ink);
+  border-bottom: 1px solid var(--ink);
+  height: 4px;
+}
+
+.link-ink {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--iron) 35%, transparent);
+  text-underline-offset: 3px;
+  text-decoration-thickness: 1px;
+}
+.link-ink:hover {
+  text-decoration-color: var(--iron);
+  color: var(--iron);
+}
+
+.src-arxiv { --src: var(--arxiv); }
+.src-pubmed { --src: var(--pubmed); }
+.src-biorxiv { --src: var(--biorxiv); }
+.src-chemrxiv { --src: var(--chemrxiv); }
+
+.scroll-shelf {
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+  scroll-snap-type: x mandatory;
+}
+
+/* Page-turn view transition between routes. */
+@view-transition {
+  navigation: auto;
+}
+::view-transition-old(root) {
+  animation: 0.28s ease both page-out;
+}
+::view-transition-new(root) {
+  animation: 0.42s cubic-bezier(0.2, 0.8, 0.2, 1) both page-in;
+}
+@keyframes page-out {
+  to { opacity: 0; transform: translateY(-6px); filter: blur(1px); }
+}
+@keyframes page-in {
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+@keyframes settle {
+  from { opacity: 0; transform: translateY(14px) rotate(var(--r, 0deg)); }
+  to { opacity: 1; transform: translateY(0) rotate(var(--r, 0deg)); }
+}
+.settle {
+  animation: settle 0.7s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+
+@keyframes stamp-in {
+  0% { opacity: 0; transform: scale(1.8) rotate(-14deg); }
+  60% { opacity: 1; transform: scale(0.94) rotate(-9deg); }
+  100% { opacity: 1; transform: scale(1) rotate(-10deg); }
+}
+.stamp-in {
+  animation: stamp-in 0.55s cubic-bezier(0.3, 1.4, 0.5, 1) 0.4s both;
+}
+
+@keyframes ink-dry {
+  from { opacity: 0.25; filter: blur(2px); }
+  to { opacity: 1; filter: blur(0); }
+}
+.ink-dry {
+  animation: ink-dry 1.2s ease both;
+}
+
+@keyframes shimmer {
+  from { background-position: -200% 0; }
+  to { background-position: 200% 0; }
+}
+.skeleton {
+  background: linear-gradient(90deg, var(--paper-2) 25%, var(--paper-3) 50%, var(--paper-2) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.8s linear infinite;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Long-form answers rendered from Markdown. */
+.prose-paper { font-size: 1.02rem; line-height: 1.7; color: var(--ink-2); }
+.prose-paper p { margin: 0 0 0.9em; }
+.prose-paper strong { color: var(--ink); font-weight: 600; }
+.prose-paper ul { list-style: none; padding-left: 0; margin: 0 0 1em; }
+.prose-paper ul > li { position: relative; padding-left: 1.3em; margin-bottom: 0.4em; }
+.prose-paper ul > li::before { content: "※"; position: absolute; left: 0; color: var(--oxblood); font-size: 0.8em; top: 0.2em; }
+.prose-paper ol { padding-left: 1.3em; list-style: decimal; margin: 0 0 1em; }
+.prose-paper h1, .prose-paper h2, .prose-paper h3 { font-family: var(--font-display); color: var(--ink); font-weight: 500; margin: 1.2em 0 0.4em; line-height: 1.2; }
+.prose-paper h2 { font-size: 1.35rem; }
+.prose-paper h3 { font-size: 1.12rem; }
+.prose-paper a { color: var(--iron); text-decoration: underline; text-underline-offset: 3px; }
+.prose-paper code { font-family: var(--font-mono); font-size: 0.85em; background: var(--paper-2); padding: 0.1em 0.3em; }
+.prose-paper blockquote { border-left: 2px solid var(--oxblood); padding-left: 1em; font-style: italic; }
+.prose-paper table { width: 100%; border-collapse: collapse; font-size: 0.9em; margin: 1em 0; }
+.prose-paper th, .prose-paper td { border-bottom: 1px solid var(--rule); padding: 0.4em 0.5em; text-align: left; }
+
+.prose-paper a.cite-ref {
+  display: inline-block;
+  min-width: 1.35em;
+  padding: 0 0.3em;
+  margin: 0 0.05em;
+  font-family: var(--font-mono);
+  font-size: 0.72em;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  vertical-align: 0.2em;
+  color: var(--oxblood);
+  border: 1px solid color-mix(in oklab, var(--oxblood) 45%, transparent);
+  border-radius: 2px;
+}
+.prose-paper a.cite-ref:hover {
+  background: var(--oxblood);
+  color: var(--sheet);
+}
